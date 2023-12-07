@@ -5,7 +5,7 @@ import { Types } from 'mongoose'
 
 const createMessageSchema = z.object({
     content: z.string().min(1),
-    status: z.nativeEnum(MessageStatus),
+    status: z.nativeEnum(MessageStatus).default(MessageStatus.SENT),
     sender: z.string(),
     receiver: z.custom((value) => Types.ObjectId.isValid(value.toString())),
 })

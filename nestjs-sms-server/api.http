@@ -1,5 +1,7 @@
 http://localhost:3000
 
+# ========== U S E R S ============
+
 ###
 GET http://localhost:3000/users
 
@@ -14,3 +16,21 @@ content-type: application/json
 
 ###
 DELETE http://localhost:3000/users/reset/database
+
+# ========== M E S S A G E S ============
+
+###
+POST http://localhost:3000/messages/send
+content-type: application/json
+
+{
+	"content": "Hello, buddy",
+	"sender": "65723086d0993605861a021d",
+	"receiver": "65723086d0993605861a021d"
+}
+
+###
+GET http://localhost:3000/messages
+
+###
+DELETE  http://localhost:3000/messages/reset/database

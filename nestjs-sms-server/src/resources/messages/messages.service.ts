@@ -1,26 +1,40 @@
 import { Injectable } from '@nestjs/common'
 import { CreateMessageDto } from './dto/create-message.dto'
-import { UpdateMessageDto } from './dto/update-message.dto'
+import { MessagesRepository } from './repositories/messages.repository'
+import { Message } from './schemas/messages.schema'
+import { Schema } from 'mongoose'
 
 @Injectable()
 export class MessagesService {
-    create(createMessageDto: CreateMessageDto) {
-        return 'This action adds a new message'
+    constructor(private readonly messagesRepository: MessagesRepository) {}
+
+    async create(createMessageDto: CreateMessageDto): Promise<Message> {
+        return await this.messagesRepository.create(createMessageDto)
     }
 
-    findAll() {
-        return `This action returns all messages`
+    async findAll(): Promise<Message[]> {
+        return await this.messagesRepository.findAll()
     }
 
-    findOne(id: number) {
-        return `This action returns a #${id} message`
+    async listMessagesByReceiver(
+        senderId: Schema.Types.ObjectId,
+        receiverId: Schema.Types.ObjectId,
+    ): Promise<Message[]> {
+        return await this.messagesRepository.listMessagesByReceiver(
+            senderId,
+            receiverId,
+        )
     }
 
-    update(id: number, updateMessageDto: UpdateMessageDto) {
-        return `This action updates a #${id} message`
+    async findOne(id: Schema.Types.ObjectId): Promise<Message> {
+        return await this.messagesRepository.findOne(id)
     }
 
-    remove(id: number) {
-        return `This action removes a #${id} message`
+    async remove(id: Schema.Types.ObjectId): Promise<void> {
+        await this.messagesRepository.remove(id)
+    }
+
+    async reset(): Promise<void> {
+        await this.messagesRepository.reset()
     }
 }

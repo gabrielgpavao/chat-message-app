@@ -3,22 +3,23 @@ import {
     Get,
     Post,
     Body,
-    Patch,
     Param,
     Delete,
     UsePipes,
+    HttpCode,
+    HttpStatus,
 } from '@nestjs/common'
 import { MessagesService } from './messages.service'
 import { CreateMessageDto } from './dto/create-message.dto'
-import { UpdateMessageDto } from './dto/update-message.dto'
 import { ZodValidationPipe } from 'nestjs-zod'
+import { Schema } from 'mongoose'
 
 @UsePipes(ZodValidationPipe)
 @Controller('messages')
 export class MessagesController {
     constructor(private readonly messagesService: MessagesService) {}
 
-    @Post()
+    @Post('send')
     create(@Body() createMessageDto: CreateMessageDto) {
         return this.messagesService.create(createMessageDto)
     }
@@ -29,20 +30,19 @@ export class MessagesController {
     }
 
     @Get(':id')
-    findOne(@Param('id') id: string) {
-        return this.messagesService.findOne(+id)
-    }
-
-    @Patch(':id')
-    update(
-        @Param('id') id: string,
-        @Body() updateMessageDto: UpdateMessageDto,
-    ) {
-        return this.messagesService.update(+id, updateMessageDto)
+    findOne(@Param('id') id: Schema.Types.ObjectId) {
+        return this.messagesService.findOne(id)
     }
 
     @Delete(':id')
-    remove(@Param('id') id: string) {
-        return this.messagesService.remove(+id)
+    @HttpCode(HttpStatus.NO_CONTENT)
+    remove(@Param('id') id: Schema.Types.ObjectId) {
+        return this.messagesService.remove(id)
+    }
+
+    @Delete('reset/database')
+    @HttpCode(HttpStatus.NO_CONTENT)
+    reset() {
+        return this.messagesService.reset()
     }
 }
