@@ -3,6 +3,5 @@ POST http://localhost:3000/login
 content-type: application/json
 
 {
-	"contact": 10,
-	"password": "123"
+	"contact": "gab@mail.com"
 }
