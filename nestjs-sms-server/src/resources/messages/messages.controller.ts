@@ -8,11 +8,14 @@ import {
     UsePipes,
     HttpCode,
     HttpStatus,
+    MessageEvent,
+    Sse,
 } from '@nestjs/common'
 import { MessagesService } from './messages.service'
 import { CreateMessageDto } from './dto/create-message.dto'
 import { ZodValidationPipe } from 'nestjs-zod'
 import { Schema } from 'mongoose'
+import { Observable, defer, map, repeat } from 'rxjs'
 
 @UsePipes(ZodValidationPipe)
 @Controller('messages')
@@ -44,5 +47,23 @@ export class MessagesController {
     @HttpCode(HttpStatus.NO_CONTENT)
     reset() {
         return this.messagesService.reset()
+    }
+
+    @Sse(':senderId/chat/:receiverId')
+    getMessages(
+        @Param('senderId') senderId: Schema.Types.ObjectId,
+        @Param('receiverId') receiverId: Schema.Types.ObjectId,
+    ): Observable<MessageEvent> {
+        return defer(() =>
+            this.messagesService.listMessagesByReceiver(senderId, receiverId),
+        ).pipe(
+            repeat({
+                delay: 1500,
+            }),
+            map((report) => ({
+                type: 'message',
+                data: report,
+            })),
+        )
     }
 }
