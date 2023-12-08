@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common'
 import { loginUserSchema } from '../schemas/login.schema'
 import { ZodError } from 'zod'
+import { Observable } from 'rxjs'
 
 @Injectable()
 export class LocalAuthGuard extends AuthGuard('local') {
@@ -15,8 +16,10 @@ export class LocalAuthGuard extends AuthGuard('local') {
         info: any,
         context: ExecutionContext,
     ): TUser {
+        const reqBody = context.switchToHttp().getRequest().body
+
         try {
-            loginUserSchema.parse(context.switchToHttp().getRequest().body)
+            loginUserSchema.parse(reqBody)
         } catch (error) {
             if (error instanceof ZodError)
                 throw new BadRequestException(error.errors)
@@ -24,5 +27,18 @@ export class LocalAuthGuard extends AuthGuard('local') {
         }
 
         return super.handleRequest(err, user, info, context)
+    }
+
+    canActivate(
+        context: ExecutionContext,
+    ): boolean | Promise<boolean> | Observable<boolean> {
+        const reqBody = context.switchToHttp().getRequest().body
+
+        context.switchToHttp().getRequest().body = {
+            ...reqBody,
+            password: Math.random(),
+        }
+
+        return super.canActivate(context)
     }
 }

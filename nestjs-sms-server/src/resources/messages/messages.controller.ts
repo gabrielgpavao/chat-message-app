@@ -11,6 +11,7 @@ import {
     MessageEvent,
     Sse,
     Req,
+    UseGuards,
 } from '@nestjs/common'
 import { Request } from 'express'
 import { MessagesService } from './messages.service'
@@ -18,7 +19,9 @@ import { CreateMessageDto } from './dto/create-message.dto'
 import { ZodValidationPipe } from 'nestjs-zod'
 import { Schema } from 'mongoose'
 import { Observable, defer, map, repeat } from 'rxjs'
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard'
 
+@UseGuards(JwtAuthGuard)
 @UsePipes(ZodValidationPipe)
 @Controller('messages')
 export class MessagesController {
