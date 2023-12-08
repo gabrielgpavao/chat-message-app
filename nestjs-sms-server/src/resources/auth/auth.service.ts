@@ -1,9 +1,18 @@
 import { Injectable } from '@nestjs/common'
-import { LoginUserDto } from './dto/login.dto'
+import { UsersService } from '../users/users.service'
 
 @Injectable()
 export class AuthService {
-    create(loginUserDto: LoginUserDto) {
-        return 'This action adds a new auth'
+    constructor(private readonly usersService: UsersService) {}
+
+    async validateUser(contact: string) {
+        const user = await this.usersService.findByContact(contact)
+
+        if (!user) return null
+
+        return {
+            id: user.id,
+            contact: user.contact,
+        }
     }
 }

@@ -25,6 +25,10 @@ export class UsersMongooseRepository implements UsersRepository {
         return await this.userModel.findById(id)
     }
 
+    async findByContact(contact: string): Promise<User> {
+        return await this.userModel.findOne({ contact })
+    }
+
     async update(id: Schema.Types.ObjectId, data: User): Promise<User> {
         return await this.userModel.findByIdAndUpdate(id, data, { new: true })
     }

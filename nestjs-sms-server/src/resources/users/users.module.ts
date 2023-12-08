@@ -18,5 +18,6 @@ import { User, UserSchema } from './schemas/users.schema'
             useClass: UsersMongooseRepository,
         },
     ],
+    exports: [UsersService],
 })
 export class UsersModule {}

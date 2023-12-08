@@ -7,6 +7,7 @@ export abstract class UsersRepository {
     abstract create(data: CreateUserDto): Promise<User>
     abstract findAll(): Promise<User[]>
     abstract findOne(id: Schema.Types.ObjectId): Promise<User>
+    abstract findByContact(contact: string): Promise<User>
     abstract update(
         id: Schema.Types.ObjectId,
         data: UpdateUserDto,
