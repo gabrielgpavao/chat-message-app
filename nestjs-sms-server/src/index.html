@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+</head>
+<body>
+	<h1>Olá</h1>
+	<button type='button' id='disconnect-button'>Desconectar</button>
+	<button type='button' onclick='sendMessage()'>Enviar</button>
+</body>
+<script type="text/javascript">
+	console.log('Conectando');
+
+	const eventSource = new EventSource('/messages/65723086d0993605861a021d/chat/6572308dd0993605861a021f');
+
+	eventSource.onmessage = (event) => {
+		const data = JSON.parse(event.data)
+		const dataLength = data.length ?? 0
+
+		if (dataLength) {
+			const message = document.createElement('li');
+			message.innerText = 'New message: ' + data[dataLength - 1].content;
+			document.body.appendChild(message);
+		}
+	}
+
+	eventSource.onerror = (event) => {
+		eventSource.close()
+	}
+
+	document.getElementById('disconnect-button').addEventListener('click', () => {
+		eventSource.close()
+	})
+
+	async function sendMessage() {
+		const body = {
+			content: "Hello, buddy",
+			sender: "65723086d0993605861a021d",
+			receiver: "6572308dd0993605861a021f"
+		}
+		
+		await fetch('/messages/send', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(body)
+		})
+	}
+</script>
+</html>
