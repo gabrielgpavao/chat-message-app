@@ -1,15 +1,17 @@
 ###
-POST http://localhost:3000/messages/send
+POST http://localhost:3000/messages/send/65723086d0993605861a021d
 content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiR2FicmllbCIsImNvbnRhY3QiOiJnYWJAbWFpbC5jb20iLCJpYXQiOjE3MDIwNzgwNDQsImV4cCI6MTcwNDY3MDA0NCwic3ViIjoiNjU3MjMwODZkMDk5MzYwNTg2MWEwMjFkIn0.jjpg27m06Mn3riPO1rWWBDPJdX8lOnvFT7nH5zSUf_c
 
 {
-	"content": "Hello, buddy",
-	"sender": "65723086d0993605861a021d",
-	"receiver": "65723086d0993605861a021d"
+	"content": "Hello, buddy"
 }
 
 ###
 GET http://localhost:3000/messages
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiR2FicmllbCIsImNvbnRhY3QiOiJnYWJAbWFpbC5jb20iLCJpYXQiOjE3MDIwNzgwNDQsImV4cCI6MTcwNDY3MDA0NCwic3ViIjoiNjU3MjMwODZkMDk5MzYwNTg2MWEwMjFkIn0.jjpg27m06Mn3riPO1rWWBDPJdX8lOnvFT7nH5zSUf_c
+
 
 ###
 DELETE  http://localhost:3000/messages/reset/database
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiR2FicmllbCIsImNvbnRhY3QiOiJnYWJAbWFpbC5jb20iLCJpYXQiOjE3MDIwNzgwNDQsImV4cCI6MTcwNDY3MDA0NCwic3ViIjoiNjU3MjMwODZkMDk5MzYwNTg2MWEwMjFkIn0.jjpg27m06Mn3riPO1rWWBDPJdX8lOnvFT7nH5zSUf_c

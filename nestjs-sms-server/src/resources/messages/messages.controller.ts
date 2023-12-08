@@ -13,7 +13,6 @@ import {
     Req,
     UseGuards,
 } from '@nestjs/common'
-import { Request } from 'express'
 import { MessagesService } from './messages.service'
 import { CreateMessageDto } from './dto/create-message.dto'
 import { ZodValidationPipe } from 'nestjs-zod'
@@ -21,35 +20,45 @@ import { Schema } from 'mongoose'
 import { Observable, defer, map, repeat } from 'rxjs'
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard'
 
-@UseGuards(JwtAuthGuard)
 @UsePipes(ZodValidationPipe)
 @Controller('messages')
 export class MessagesController {
     constructor(private readonly messagesService: MessagesService) {}
 
-    @Post('send')
-    create(@Body() createMessageDto: CreateMessageDto) {
-        return this.messagesService.create(createMessageDto)
+    @UseGuards(JwtAuthGuard)
+    @Post('send/:receiverId')
+    create(
+        @Param('receiverId') receiverId: Schema.Types.ObjectId,
+        @Body() createMessageDto: CreateMessageDto,
+        @Req() { user },
+    ) {
+        return this.messagesService.create({
+            content: createMessageDto.content,
+            senderId: user.id,
+            receiverId,
+        })
     }
 
+    @UseGuards(JwtAuthGuard)
     @Get()
-    findAll(@Req() req: Request) {
-        console.log(req.user)
-
+    findAll() {
         return this.messagesService.findAll()
     }
 
+    @UseGuards(JwtAuthGuard)
     @Get(':id')
     findOne(@Param('id') id: Schema.Types.ObjectId) {
         return this.messagesService.findOne(id)
     }
 
+    @UseGuards(JwtAuthGuard)
     @Delete(':id')
     @HttpCode(HttpStatus.NO_CONTENT)
     remove(@Param('id') id: Schema.Types.ObjectId) {
         return this.messagesService.remove(id)
     }
 
+    @UseGuards(JwtAuthGuard)
     @Delete('reset/database')
     @HttpCode(HttpStatus.NO_CONTENT)
     reset() {

@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common'
-import { CreateMessageDto } from './dto/create-message.dto'
-import { MessagesRepository } from './repositories/messages.repository'
+import {
+    MessagesRepository,
+    iCreateMessageData,
+} from './repositories/messages.repository'
 import { Message } from './schemas/messages.schema'
 import { Schema } from 'mongoose'
 
@@ -8,7 +10,7 @@ import { Schema } from 'mongoose'
 export class MessagesService {
     constructor(private readonly messagesRepository: MessagesRepository) {}
 
-    async create(createMessageDto: CreateMessageDto): Promise<Message> {
+    async create(createMessageDto: iCreateMessageData): Promise<Message> {
         return await this.messagesRepository.create(createMessageDto)
     }
 

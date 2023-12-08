@@ -7,46 +7,65 @@
 </head>
 <body>
 	<h1>Olá</h1>
+	<button type='button' onclick='getMessagesSSE()'>Receber Mensagens</button>
 	<button type='button' id='disconnect-button'>Desconectar</button>
 	<button type='button' onclick='sendMessage()'>Enviar</button>
 </body>
 <script type="text/javascript">
-	console.log('Conectando');
-
-	const eventSource = new EventSource('/messages/65723086d0993605861a021d/chat/6572308dd0993605861a021f');
-
-	eventSource.onmessage = (event) => {
-		const data = JSON.parse(event.data)
-		const dataLength = data.length ?? 0
-
-		if (dataLength) {
-			const message = document.createElement('li');
-			message.innerText = 'New message: ' + data[dataLength - 1].content;
-			document.body.appendChild(message);
-		}
-	}
-
-	eventSource.onerror = (event) => {
-		eventSource.close()
-	}
-
-	document.getElementById('disconnect-button').addEventListener('click', () => {
-		eventSource.close()
-	})
-
-	async function sendMessage() {
-		const body = {
-			content: "Hello, buddy",
-			sender: "65723086d0993605861a021d",
-			receiver: "6572308dd0993605861a021f"
-		}
-		
-		await fetch('/messages/send', {
+	async function getToken(contact) {
+		const response = await fetch('/login', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json'
 			},
-			body: JSON.stringify(body)
+			body: JSON.stringify({ contact }),
+		})
+
+		const { token } = await response.json()
+
+		return token
+	}
+
+	async function getMessagesSSE() {
+		console.log('Conectando...');
+
+		const eventSource = new EventSource('/messages/65723086d0993605861a021d/chat/6572308dd0993605861a021f');
+	
+		eventSource.onmessage = (event) => {
+			console.log(event);
+			const data = JSON.parse(event.data)
+			const dataLength = data.length ?? 0
+	
+			if (dataLength) {
+				const message = document.createElement('li');
+				message.innerText = 'New message: ' + data[dataLength - 1].content;
+				document.body.appendChild(message);
+			}
+		}
+	
+		eventSource.onerror = (event) => {
+			eventSource.close()
+		}
+	
+		document.getElementById('disconnect-button').addEventListener('click', () => {
+			eventSource.close()
+		})
+	}
+	
+	async function sendMessage() {
+		const token = await getToken('gab@mail.com')
+		
+		const body = {
+			content: "Hello, buddy"
+		}
+		
+		await fetch('/messages/send/6572308dd0993605861a021f', {
+			method: 'POST',
+			headers: {
+				'Authorization': `Bearer ${token}`,
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(body),
 		})
 	}
 </script>
