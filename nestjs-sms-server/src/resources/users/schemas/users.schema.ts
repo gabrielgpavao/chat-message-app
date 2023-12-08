@@ -7,7 +7,7 @@ export class User extends Document {
     @Prop({ required: true })
     name: string
 
-    @Prop({ trim: true, required: true })
+    @Prop({ trim: true, required: true, unique: true })
     contact: string
 
     @Prop({ type: Date, default: Date.now })
