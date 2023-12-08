@@ -21,6 +21,10 @@ export class UsersService {
         return await this.usersRepository.findOne(id)
     }
 
+    async findByContact(contact: string): Promise<User> {
+        return await this.usersRepository.findByContact(contact)
+    }
+
     async update(
         id: Schema.Types.ObjectId,
         updateUserDto: UpdateUserDto,

@@ -4,6 +4,7 @@ import { UsersModule } from './resources/users/users.module'
 import { ConfigModule } from '@nestjs/config'
 import { MongooseModule } from '@nestjs/mongoose'
 import { MessagesModule } from './resources/messages/messages.module'
+import { AuthModule } from './resources/auth/auth.module'
 
 @Module({
     imports: [
@@ -11,6 +12,7 @@ import { MessagesModule } from './resources/messages/messages.module'
         MongooseModule.forRoot(process.env.DATABASE_URL),
         UsersModule,
         MessagesModule,
+        AuthModule,
     ],
     controllers: [AppController],
 })

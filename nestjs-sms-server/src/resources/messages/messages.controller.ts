@@ -10,7 +10,9 @@ import {
     HttpStatus,
     MessageEvent,
     Sse,
+    Req,
 } from '@nestjs/common'
+import { Request } from 'express'
 import { MessagesService } from './messages.service'
 import { CreateMessageDto } from './dto/create-message.dto'
 import { ZodValidationPipe } from 'nestjs-zod'
@@ -28,7 +30,9 @@ export class MessagesController {
     }
 
     @Get()
-    findAll() {
+    findAll(@Req() req: Request) {
+        console.log(req.user)
+
         return this.messagesService.findAll()
     }
 
