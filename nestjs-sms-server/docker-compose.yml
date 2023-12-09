@@ -1,0 +1,36 @@
+version: '3'
+
+services:
+  app:
+    build: .
+    ports:
+      - 3000:3000
+    volumes:
+      - .:/home/node/app
+    extra_hosts:
+      - "host.docker.internal:172.17.0.1"
+
+  mongodb:
+    container_name: mongodb
+    build: ./mongo_rs
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_PASSWORD: root
+      MONGO_REPLICA_HOST: mongodb
+      MONGODB_DATABASE: nestjs_sms_db
+    volumes:
+      - ./mongodb_data:/data/mongodb
+  
+  redis-cache:
+    container_name: redis
+    image: redis:7.2-rc1-alpine
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - 6379:6379
+    command: redis-server --requirepass ${REDIS_PASSWORD}
+
+volumes:
+  mongodb_data:
+    driver: local
