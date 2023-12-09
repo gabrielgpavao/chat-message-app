@@ -5,6 +5,7 @@ import { MongooseModule } from '@nestjs/mongoose'
 import { Message, MessageSchema } from './schemas/messages.schema'
 import { MessagesRepository } from './repositories/messages.repository'
 import { MessagesMongooseRepository } from './repositories/mongoose/messages-mongoose.repository'
+import { RedisService } from 'src/cache/redis.service'
 
 @Module({
     imports: [
@@ -19,6 +20,7 @@ import { MessagesMongooseRepository } from './repositories/mongoose/messages-mon
             provide: MessagesRepository,
             useClass: MessagesMongooseRepository,
         },
+        RedisService,
     ],
 })
 export class MessagesModule {}

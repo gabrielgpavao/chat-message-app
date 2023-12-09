@@ -38,7 +38,7 @@
 	
 			if (dataLength) {
 				const message = document.createElement('li');
-				message.innerText = 'New message: ' + data[dataLength - 1].content;
+				message.innerText = 'New message: ' + data[dataLength - 1].content + dataLength;
 				document.body.appendChild(message);
 			}
 		}
