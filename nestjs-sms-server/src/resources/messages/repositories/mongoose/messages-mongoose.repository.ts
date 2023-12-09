@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common'
-import { MessagesRepository } from '../messages.repository'
+import { MessagesRepository, iCreateMessageData } from '../messages.repository'
 import { Model, Schema } from 'mongoose'
-import { CreateMessageDto } from '../../dto/create-message.dto'
 import { Message } from '../../schemas/messages.schema'
 import { InjectModel } from '@nestjs/mongoose'
 
@@ -12,8 +11,16 @@ export class MessagesMongooseRepository implements MessagesRepository {
         private readonly messageModel: Model<Message>,
     ) {}
 
-    async create(data: CreateMessageDto): Promise<Message> {
-        const newMessage = new this.messageModel(data)
+    async create({
+        content,
+        senderId,
+        receiverId,
+    }: iCreateMessageData): Promise<Message> {
+        const newMessage = new this.messageModel({
+            content,
+            sender: senderId,
+            receiver: receiverId,
+        })
         return await newMessage.save()
     }
 

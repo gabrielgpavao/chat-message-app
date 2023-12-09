@@ -1,9 +1,14 @@
 import { Schema } from 'mongoose'
-import { CreateMessageDto } from '../dto/create-message.dto'
 import { Message } from '../schemas/messages.schema'
 
+export interface iCreateMessageData {
+    senderId: Schema.Types.ObjectId
+    receiverId: Schema.Types.ObjectId
+    content: string
+}
+
 export abstract class MessagesRepository {
-    abstract create(data: CreateMessageDto): Promise<Message>
+    abstract create(data: iCreateMessageData): Promise<Message>
     abstract findAll(): Promise<Message[]>
     abstract listMessagesByReceiver(
         senderId: Schema.Types.ObjectId,
