@@ -56,23 +56,11 @@ export class MessagesService {
             receiverId,
         )
 
-        const cachedMessages: string | null =
-            await this.redisService.get(cacheDatabaseName)
-
-        if (cachedMessages) {
-            console.log('Vim pelo Cache')
-            return JSON.parse(cachedMessages)
-        }
-
-        const messages = await this.messagesRepository.listMessagesByReceiver(
-            senderId,
-            receiverId,
+        return (
+            (await this.redisService.getParsedCachedData<Message[]>(
+                cacheDatabaseName,
+            )) ?? []
         )
-
-        this.redisService.set(cacheDatabaseName, JSON.stringify(messages))
-        console.log('Vim pelo Banco')
-
-        return messages
     }
 
     async findOne(id: Schema.Types.ObjectId): Promise<Message> {
@@ -80,10 +68,29 @@ export class MessagesService {
     }
 
     async remove(id: Schema.Types.ObjectId): Promise<void> {
-        await this.messagesRepository.remove(id)
+        const { sender, receiver } = await this.messagesRepository.remove(id)
+
+        const cacheDatabaseName = this.messageCacheDatabaseName(
+            sender.id,
+            receiver.id,
+        )
+
+        const oldCachedMessages = await this.redisService.get(cacheDatabaseName)
+
+        const updatedCachedMessages = oldCachedMessages
+            ? JSON.parse(oldCachedMessages).filter(
+                  (message: Message) => message.id !== id,
+              )
+            : []
+
+        await this.redisService.set(
+            cacheDatabaseName,
+            JSON.stringify(updatedCachedMessages),
+        )
     }
 
     async reset(): Promise<void> {
         await this.messagesRepository.reset()
+        await this.redisService.flushdb()
     }
 }

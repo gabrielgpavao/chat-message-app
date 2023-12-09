@@ -15,6 +15,6 @@ export abstract class MessagesRepository {
         receiverId: Schema.Types.ObjectId,
     ): Promise<Message[]>
     abstract findOne(id: Schema.Types.ObjectId): Promise<Message>
-    abstract remove(id: Schema.Types.ObjectId): Promise<void>
+    abstract remove(id: Schema.Types.ObjectId): Promise<Message>
     abstract reset(): Promise<void>
 }
