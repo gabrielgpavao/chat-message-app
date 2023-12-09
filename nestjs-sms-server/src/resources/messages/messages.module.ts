@@ -7,6 +7,8 @@ import { MessagesRepository } from './repositories/messages.repository'
 import { MessagesMongooseRepository } from './repositories/mongoose/messages-mongoose.repository'
 import { RedisService } from 'src/cache/redis.service'
 import { BullModule } from '@nestjs/bull'
+import { MessagesProducer } from './jobs/messages.producer'
+import { MessagesProcessor } from './jobs/messages.processor'
 
 @Module({
     imports: [
@@ -23,6 +25,8 @@ import { BullModule } from '@nestjs/bull'
             useClass: MessagesMongooseRepository,
         },
         RedisService,
+        MessagesProducer,
+        MessagesProcessor,
     ],
 })
 export class MessagesModule {}
