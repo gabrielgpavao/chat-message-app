@@ -5,13 +5,42 @@ import {
 } from './repositories/messages.repository'
 import { Message } from './schemas/messages.schema'
 import { Schema } from 'mongoose'
+import { RedisService } from 'src/cache/redis.service'
 
 @Injectable()
 export class MessagesService {
-    constructor(private readonly messagesRepository: MessagesRepository) {}
+    constructor(
+        private readonly messagesRepository: MessagesRepository,
+        private readonly redisService: RedisService,
+    ) {}
+
+    private messageCacheDatabaseName(
+        senderId: Schema.Types.ObjectId,
+        receiverId: Schema.Types.ObjectId,
+    ): string {
+        return 'message' + ':' + senderId + ':' + receiverId
+    }
 
     async create(createMessageDto: iCreateMessageData): Promise<Message> {
-        return await this.messagesRepository.create(createMessageDto)
+        const newMessage =
+            await this.messagesRepository.create(createMessageDto)
+
+        const cacheDatabaseName = this.messageCacheDatabaseName(
+            createMessageDto.senderId,
+            createMessageDto.receiverId,
+        )
+
+        const parsedCachedMessages: Message[] =
+            (await this.redisService.getParsedCachedData<Message[]>(
+                cacheDatabaseName,
+            )) ?? []
+
+        this.redisService.set(
+            cacheDatabaseName,
+            JSON.stringify([...parsedCachedMessages, newMessage]),
+        )
+
+        return newMessage
     }
 
     async findAll(): Promise<Message[]> {
