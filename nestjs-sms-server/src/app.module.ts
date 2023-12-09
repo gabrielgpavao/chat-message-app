@@ -7,6 +7,7 @@ import { MessagesModule } from './resources/messages/messages.module'
 import { AuthModule } from './resources/auth/auth.module'
 import { CacheModule } from '@nestjs/cache-manager'
 import { redisStore } from 'cache-manager-redis-yet'
+import { BullModule } from '@nestjs/bull'
 
 @Module({
     imports: [
@@ -23,6 +24,13 @@ import { redisStore } from 'cache-manager-redis-yet'
                     store: await redisStore(config),
                     ...config,
                 }
+            },
+        }),
+        BullModule.forRoot({
+            redis: {
+                host: 'redis-cache',
+                password: process.env.REDIS_PASSWORD,
+                port: +process.env.REDIS_PORT,
             },
         }),
         UsersModule,

@@ -6,12 +6,14 @@ import { Message, MessageSchema } from './schemas/messages.schema'
 import { MessagesRepository } from './repositories/messages.repository'
 import { MessagesMongooseRepository } from './repositories/mongoose/messages-mongoose.repository'
 import { RedisService } from 'src/cache/redis.service'
+import { BullModule } from '@nestjs/bull'
 
 @Module({
     imports: [
         MongooseModule.forFeature([
             { name: Message.name, schema: MessageSchema },
         ]),
+        BullModule.registerQueue({ name: 'messages-queue' }),
     ],
     controllers: [MessagesController],
     providers: [
