@@ -62,25 +62,19 @@ export class MessagesService {
     }
 
     async remove(id: Schema.Types.ObjectId): Promise<void> {
-        const { sender, receiver } = await this.messagesRepository.remove(id)
+        const deletedMessage = await this.messagesRepository.remove(id)
 
-        const cacheDatabaseName = this.messageCacheDatabaseName(
-            sender.id,
-            receiver.id,
-        )
+        if (deletedMessage) {
+            const cacheDatabaseName = this.messageCacheDatabaseName(
+                deletedMessage.sender._id.toString(),
+                deletedMessage.receiver._id.toString(),
+            )
 
-        const oldCachedMessages = await this.redisService.get(cacheDatabaseName)
-
-        const updatedCachedMessages = oldCachedMessages
-            ? JSON.parse(oldCachedMessages).filter(
-                  (message: Message) => message.id !== id,
-              )
-            : []
-
-        await this.redisService.set(
-            cacheDatabaseName,
-            JSON.stringify(updatedCachedMessages),
-        )
+            await this.messagesProducer.messageDeletedQueue(
+                cacheDatabaseName,
+                id,
+            )
+        }
     }
 
     async reset(): Promise<void> {

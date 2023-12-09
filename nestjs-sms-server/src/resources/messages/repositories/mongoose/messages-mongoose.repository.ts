@@ -42,7 +42,9 @@ export class MessagesMongooseRepository implements MessagesRepository {
     }
 
     async remove(id: Schema.Types.ObjectId): Promise<Message> {
-        return (await this.messageModel.findByIdAndDelete(id)).value
+        const deletedMessge = await this.messageModel.findByIdAndDelete(id)
+
+        return deletedMessge as unknown as Message
     }
 
     async reset(): Promise<void> {
