@@ -9,20 +9,13 @@ export class MessagesProcessor {
 
     @Process('messages-job')
     async setMessageToCache(job: Job<string>) {
-        console.log('Consumindo mensagem...\n')
+        const { key, message } = JSON.parse(job.data)
 
         const cachedMessages: Message[] =
-            (await this.redisService.getParsedCachedData<Message[]>(
-                'messages',
-            )) ?? []
+            (await this.redisService.getParsedCachedData<Message[]>(key)) ?? []
 
-        const updatedCachedMessages: Message[] = [
-            ...cachedMessages,
-            JSON.parse(job.data),
-        ]
+        const updatedCachedMessages: Message[] = [...cachedMessages, message]
 
-        this.redisService
-            .set('messages', JSON.stringify(updatedCachedMessages))
-            .then(() => console.log('Cache atualizado\n'))
+        this.redisService.set(key, JSON.stringify(updatedCachedMessages))
     }
 }

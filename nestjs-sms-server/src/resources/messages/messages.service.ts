@@ -6,12 +6,14 @@ import {
 import { Message } from './schemas/messages.schema'
 import { Schema } from 'mongoose'
 import { RedisService } from 'src/cache/redis.service'
+import { MessagesProducer } from './jobs/messages.producer'
 
 @Injectable()
 export class MessagesService {
     constructor(
         private readonly messagesRepository: MessagesRepository,
         private readonly redisService: RedisService,
+        private readonly messagesProducer: MessagesProducer,
     ) {}
 
     private messageCacheDatabaseName(
@@ -30,15 +32,7 @@ export class MessagesService {
             createMessageDto.receiverId,
         )
 
-        const parsedCachedMessages: Message[] =
-            (await this.redisService.getParsedCachedData<Message[]>(
-                cacheDatabaseName,
-            )) ?? []
-
-        this.redisService.set(
-            cacheDatabaseName,
-            JSON.stringify([...parsedCachedMessages, newMessage]),
-        )
+        this.messagesProducer.addMessageToQueue(cacheDatabaseName, newMessage)
 
         return newMessage
     }

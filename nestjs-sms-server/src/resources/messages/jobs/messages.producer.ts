@@ -10,8 +10,7 @@ export class MessagesProducer {
         private readonly messagesQueue: Queue,
     ) {}
 
-    addMessageToQueue(message: Message) {
-        console.log('Publicando mensagem na fila...\n')
-        this.messagesQueue.add('messages-job', JSON.stringify(message))
+    addMessageToQueue(key: string, message: Message) {
+        this.messagesQueue.add('messages-job', JSON.stringify({ key, message }))
     }
 }
