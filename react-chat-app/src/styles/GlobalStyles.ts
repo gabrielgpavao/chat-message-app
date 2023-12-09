@@ -45,6 +45,7 @@ export const GlobalStyles = createGlobalStyle`
         --blue-1: #0D0630;
 		--blue-2: #18314F;
         --blue-3: #384E77;
+		/* --blue-opacity: ; */
 
         --white: #F9F9F9;
         
