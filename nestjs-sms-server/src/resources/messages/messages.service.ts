@@ -51,10 +51,28 @@ export class MessagesService {
         senderId: Schema.Types.ObjectId,
         receiverId: Schema.Types.ObjectId,
     ): Promise<Message[]> {
-        return await this.messagesRepository.listMessagesByReceiver(
+        const cacheDatabaseName = this.messageCacheDatabaseName(
             senderId,
             receiverId,
         )
+
+        const cachedMessages: string | null =
+            await this.redisService.get(cacheDatabaseName)
+
+        if (cachedMessages) {
+            console.log('Vim pelo Cache')
+            return JSON.parse(cachedMessages)
+        }
+
+        const messages = await this.messagesRepository.listMessagesByReceiver(
+            senderId,
+            receiverId,
+        )
+
+        this.redisService.set(cacheDatabaseName, JSON.stringify(messages))
+        console.log('Vim pelo Banco')
+
+        return messages
     }
 
     async findOne(id: Schema.Types.ObjectId): Promise<Message> {
