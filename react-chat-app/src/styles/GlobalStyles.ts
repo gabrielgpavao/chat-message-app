@@ -27,7 +27,7 @@ export const GlobalStyles = createGlobalStyle`
     
     body{
         background-color: #0D0630;
-        color: #F9F9F9;
+        color: #F8FFE3;
     }
 
     a {
@@ -36,6 +36,7 @@ export const GlobalStyles = createGlobalStyle`
     
     button {
         cursor: pointer;
+		outline: none;
     }
 
     :root {
@@ -46,7 +47,7 @@ export const GlobalStyles = createGlobalStyle`
 		--blue-2: #18314F;
         --blue-3: #384E77;
 
-        --white: #F9F9F9;
+        --white: #F8FFE3;
         
         --error: #E63462
     }
