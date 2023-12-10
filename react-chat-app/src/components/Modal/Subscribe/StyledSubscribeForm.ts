@@ -28,6 +28,13 @@ export const StyledSubscribeForm = styled.form`
 			color: var(--blue-1);
 			background-color: var(--brand-2);
 			outline: none;
+
+		}
+
+		.error {
+			margin-top: 6px;
+			font-size: 14px;
+			color: var(--error);
 		}
 	}
 	button {
@@ -45,9 +52,5 @@ export const StyledSubscribeForm = styled.form`
 	button:hover {
 		transition: 0.3s;
 		background-color: var(--brand-2);
-	}
-
-	button:focus {
-		background-color: var(--blue-1);
 	}
 `
