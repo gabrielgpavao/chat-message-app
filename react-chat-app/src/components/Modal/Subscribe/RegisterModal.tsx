@@ -1,7 +1,9 @@
-import { Dispatch, FocusEvent, FormEvent, SetStateAction, useState } from 'react'
+import { FocusEvent, FormEvent, useState } from 'react'
 import { Modal } from '../Base/BaseModal'
-import { StyledSubscribeForm } from './StyledSubscribeForm'
+import { StyledForm } from './StyledForm'
 import { ZodError, z } from 'zod'
+import { tSubscribeModalsProps } from '.'
+import toast from 'react-hot-toast'
 
 const userInputSchema = z.object({
 	name: z
@@ -17,7 +19,7 @@ const userInputSchema = z.object({
 
 type tUserInput = z.infer<typeof userInputSchema>
 
-export function SubscribeModal({ setIsOpen }: { setIsOpen: Dispatch<SetStateAction<boolean>> }) {
+export function RegisterModal({ setIsLoginOpen, setIsRegisterOpen }: tSubscribeModalsProps) {
 	const [userInput, setUserInput] = useState<Partial<tUserInput>>()
 	const [formErrors, setFormErrors] = useState<Record<string, string>>({})
 
@@ -37,7 +39,7 @@ export function SubscribeModal({ setIsOpen }: { setIsOpen: Dispatch<SetStateActi
 			const reqBody = userInputSchema.parse(userInput)
 
 			const baseURL = import.meta.env.VITE_SERVER_URL
-			const response = await fetch(baseURL + '/users', {
+			const responseRegister = await fetch(baseURL + '/users', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
@@ -45,10 +47,25 @@ export function SubscribeModal({ setIsOpen }: { setIsOpen: Dispatch<SetStateActi
 				body: JSON.stringify(reqBody),
 			})
 
-			const responseData = await response.json()
-			localStorage.setItem('user:connected', JSON.stringify(responseData))
-			setIsOpen(false)
-	
+			if (!responseRegister.ok) throw new Error
+
+			const responseRegisterData = await responseRegister.json()
+
+			const responseLogin = await fetch(baseURL + '/login', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({ contact: reqBody.contact }),
+			})
+
+			if (!responseRegister.ok) throw new Error
+			
+			const { token } = await responseLogin.json()
+			
+			localStorage.setItem('user:connected', JSON.stringify(responseRegisterData))
+			localStorage.setItem('user:token', JSON.stringify(token))
+			setIsRegisterOpen(false)
 		} catch (error) {
 			if (error instanceof ZodError) {
 				const errors: Record<string, string> = {}
@@ -59,14 +76,15 @@ export function SubscribeModal({ setIsOpen }: { setIsOpen: Dispatch<SetStateActi
 				})
 				setFormErrors(errors)
 			}
-
+			
+			toast.error('Ops,tivemos algum erro inesperado.')
 			console.error(error)
 		}
 	}
 
 	return (
 		<Modal title='Bem-vindo ao App' >
-			<StyledSubscribeForm onSubmit={handleSubmit}>
+			<StyledForm onSubmit={handleSubmit}>
 				<p>Nos informe o seu contato:</p>
 
 				<fieldset>
@@ -95,8 +113,17 @@ export function SubscribeModal({ setIsOpen }: { setIsOpen: Dispatch<SetStateActi
 					{formErrors.contact && <small className='error'>{formErrors.contact}</small>}
 				</fieldset>
 
+				<small>Já possui uma conta? Clique {}
+					<span onClick={() => {
+						setIsRegisterOpen(false)
+						setIsLoginOpen(true)
+					}}>
+						aqui
+					</span>
+				</small>
+
 				<button type="submit">Concluir</button>
-			</StyledSubscribeForm>
+			</StyledForm>
 		</Modal>
 	)
 }

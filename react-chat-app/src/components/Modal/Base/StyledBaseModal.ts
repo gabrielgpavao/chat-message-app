@@ -8,6 +8,7 @@ export const StyledBaseModal = styled.div`
 	padding: 0 1rem;
 	position: fixed;
 	inset: 0;
+	background-color: var(--blue-1);
 
 	section {
 		width: 32rem;
