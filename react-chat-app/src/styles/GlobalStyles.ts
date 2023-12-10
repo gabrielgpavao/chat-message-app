@@ -36,8 +36,11 @@ export const GlobalStyles = createGlobalStyle`
     
     button {
         cursor: pointer;
-		outline: none;
     }
+	
+	input, button {
+		outline: none;
+	}
 
     :root {
         --brand-1: #E6F9AF;
