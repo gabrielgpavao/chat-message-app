@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-export const StyledSubscribeForm = styled.form`
+export const StyledForm = styled.form`
 	p {
 		line-height: 1.375rem;
 		margin-bottom: 1rem;
@@ -37,9 +37,21 @@ export const StyledSubscribeForm = styled.form`
 			color: var(--error);
 		}
 	}
+
+	> small {
+		font-size: 0.875rem;
+		color: var(--brand-2);
+
+		span {
+		color: var(--brand-1);
+			cursor: pointer;
+		}
+	}
+	
 	button {
 		height: 2.5rem;
 		width: 100%;
+		margin-top: 1rem;
 		
 		border-radius: 0.375rem;
 		font-weight: 600;

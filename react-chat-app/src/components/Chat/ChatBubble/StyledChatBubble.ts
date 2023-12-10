@@ -1,7 +1,7 @@
 import styled, { css } from 'styled-components'
 
 type tStyledChatBubbleProps = {
-	isSelf: boolean
+	$isSelf: boolean
 }
 
 export const StyledChatBubble = styled.div<tStyledChatBubbleProps>`
@@ -22,7 +22,7 @@ export const StyledChatBubble = styled.div<tStyledChatBubbleProps>`
 		}
 	}
 	
-	${({ isSelf }) => !isSelf && css`
+	${({ $isSelf }) => !$isSelf && css`
 		background-color: var(--brand-2);
 	`}
 `
