@@ -32,8 +32,8 @@ export const StyledSubscribeForm = styled.form`
 		}
 
 		.error {
-			margin-top: 6px;
-			font-size: 14px;
+			margin-top: 0.375rem;
+			font-size: 0.875rem;
 			color: var(--error);
 		}
 	}

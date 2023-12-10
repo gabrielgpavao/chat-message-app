@@ -5,6 +5,7 @@ export const StyledBaseModal = styled.div`
 	display: flex;
 	justify-content: center;
 	align-items: flex-start;
+	padding: 0 1rem;
 	position: fixed;
 	inset: 0;
 
