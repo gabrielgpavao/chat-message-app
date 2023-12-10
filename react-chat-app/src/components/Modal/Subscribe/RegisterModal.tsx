@@ -4,6 +4,7 @@ import { StyledForm } from './StyledForm'
 import { ZodError, z } from 'zod'
 import { tSubscribeModalsProps } from '.'
 import toast from 'react-hot-toast'
+import { baseURL } from '../../../constants/baseURL'
 
 const userInputSchema = z.object({
 	name: z
@@ -38,7 +39,6 @@ export function RegisterModal({ setIsLoginOpen, setIsRegisterOpen }: tSubscribeM
 		try {
 			const reqBody = userInputSchema.parse(userInput)
 
-			const baseURL = import.meta.env.VITE_SERVER_URL
 			const responseRegister = await fetch(baseURL + '/users', {
 				method: 'POST',
 				headers: {

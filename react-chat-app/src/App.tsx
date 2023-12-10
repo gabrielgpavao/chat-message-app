@@ -6,8 +6,8 @@ import { Toaster } from 'react-hot-toast'
 export function App() {
 	return (
 		<StyledContainer>
-			<SubscribeModal />
-			<Chat />
+			{/* <SubscribeModal /> */}
+			{/* <Chat /> */}
 			<Toaster position='top-right'/>
 		</StyledContainer>
 	)
