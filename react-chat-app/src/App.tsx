@@ -1,11 +1,9 @@
-import { Modal } from './components/Modal/BaseModal'
+import { SubscribeModal } from './components/Modal/Subscribe/SubscribeModal'
 
 export function App() {
 	return (
 		<main>
-			<Modal title='Bem-vindo ao App' onClose={() => console.log('fechar')}>
-				<div>Conteúdo do modal</div>
-			</Modal>
+			<SubscribeModal></SubscribeModal>
 		</main>
 	)
 }
