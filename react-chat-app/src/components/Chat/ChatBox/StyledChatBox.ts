@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-export const StyledChat = styled.section`
+export const StyledChatBox = styled.section`
 	width: 100%;
 	height: calc(100vh - 2rem);
 	padding: 0.625rem;

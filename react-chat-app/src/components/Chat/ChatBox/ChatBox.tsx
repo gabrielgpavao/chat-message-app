@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
-import { ChatBubble } from './ChatBubble/ChatBubble'
-import { StyledChat } from './StyledChat'
-import { baseURL } from '../../constants/baseURL'
+import { ChatBubble } from '../ChatBubble/ChatBubble'
+import { StyledChatBox } from './StyledChatBox'
+import { baseURL } from '../../../constants/baseURL'
 import { PaperPlaneRight } from '@phosphor-icons/react'
 import toast from 'react-hot-toast'
 
@@ -19,7 +19,7 @@ type tMessage = {
 	receiver: string
 }
 
-export function Chat({ receiver }: { receiver: tChatProps }) {
+export function ChatBox({ receiver }: { receiver: tChatProps }) {
 	const [messages, setMessages] = useState([] as tMessage[])
 	const [sendMessageContent, setSendMessageContent] = useState('')
 	const userConnected = JSON.parse(localStorage.getItem('user:connected')!)
@@ -64,7 +64,7 @@ export function Chat({ receiver }: { receiver: tChatProps }) {
 	}
 
 	return (
-		<StyledChat>
+		<StyledChatBox>
 			<div>
 				<header>
 					<h2>Chat Message</h2>
@@ -108,6 +108,6 @@ export function Chat({ receiver }: { receiver: tChatProps }) {
 					<PaperPlaneRight size={30} color='var(--blue-1)' />
 				</button>
 			</div>
-		</StyledChat>
+		</StyledChatBox>
 	)
 }

@@ -1,11 +1,12 @@
 import { SubscribeModal } from './components/Modal/Subscribe'
 import { StyledContainer } from './styles/StyledContainer'
-import { Chat } from './components/Chat/Chat'
+import { ChatGroups } from './components/Chat'
 import { Toaster } from 'react-hot-toast'
 
 export function App() {
 	return (
 		<StyledContainer>
+			<ChatGroups />
 			{/* <SubscribeModal /> */}
 			{/* <Chat
 				receiver={{
