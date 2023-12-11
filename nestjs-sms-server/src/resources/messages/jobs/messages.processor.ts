@@ -9,14 +9,24 @@ export class MessagesProcessor {
 
     @Process('message-sent-job')
     async setMessageToCache(job: Job<string>) {
-        const { key, message } = JSON.parse(job.data)
+        const { senderId, receiverId, message } = JSON.parse(job.data)
+
+        const cacheDatabaseName = await this.redisService.messageCacheDatabase(
+            senderId,
+            receiverId,
+        )
 
         const cachedMessages: Message[] =
-            (await this.redisService.getParsedCachedData<Message[]>(key)) ?? []
+            (await this.redisService.getParsedCachedData<Message[]>(
+                cacheDatabaseName,
+            )) ?? []
 
         const updatedCachedMessages: Message[] = [...cachedMessages, message]
 
-        this.redisService.set(key, JSON.stringify(updatedCachedMessages))
+        this.redisService.set(
+            cacheDatabaseName,
+            JSON.stringify(updatedCachedMessages),
+        )
     }
 
     @Process('message-deleted-job')
