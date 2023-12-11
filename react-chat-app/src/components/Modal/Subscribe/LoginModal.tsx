@@ -4,6 +4,7 @@ import { StyledForm } from './StyledForm'
 import { ZodError, z } from 'zod'
 import { tSubscribeModalsProps } from '.'
 import toast from 'react-hot-toast'
+import { baseURL } from '../../../constants/baseURL'
 
 const loginUserSchema = z.object({
 	contact: z
@@ -25,7 +26,6 @@ export function LoginModal({ setIsLoginOpen, setIsRegisterOpen }: tSubscribeModa
 		try {
 			const reqBody = loginUserSchema.parse(loginUserInput)
 
-			const baseURL = import.meta.env.VITE_SERVER_URL
 			const response = await fetch(baseURL + '/login', {
 				method: 'POST',
 				headers: {
@@ -35,9 +35,12 @@ export function LoginModal({ setIsLoginOpen, setIsRegisterOpen }: tSubscribeModa
 			})
 
 			if (!response.ok) throw new Error
-			
-			const { token } = await response.json()
+
+			const { user, token } = await response.json()
+
+			localStorage.setItem('user:connected', JSON.stringify(user))
 			localStorage.setItem('user:token', JSON.stringify(token))
+
 			setIsLoginOpen(false)
 		} catch (error) {
 			if (error instanceof ZodError) {

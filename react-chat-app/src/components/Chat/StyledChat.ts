@@ -7,6 +7,7 @@ export const StyledChat = styled.section`
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
+	position: relative;
 
 	border-radius: 0.375rem;
 	background-color: var(--blue-2);
@@ -48,5 +49,15 @@ export const StyledChat = styled.section`
 		border-radius: 0.375rem;
 		background-color: var(--brand-2);
 		color: var(--blue-1);
+	}
+
+	button {
+		height: 2.5rem;
+		width: 2.5rem;
+		position: absolute;
+		right: 0.625rem;
+		border-radius: 0 0.375rem 0.375rem 0 ;
+		background-color: var(--brand-1);
+		cursor: pointer;
 	}
 `
