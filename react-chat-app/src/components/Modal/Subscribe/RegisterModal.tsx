@@ -49,7 +49,7 @@ export function RegisterModal({ setIsLoginOpen, setIsRegisterOpen }: tSubscribeM
 
 			if (!responseRegister.ok) throw new Error
 
-			const responseRegisterData = await responseRegister.json()
+			const { _id, ...user } = await responseRegister.json()
 
 			const responseLogin = await fetch(baseURL + '/login', {
 				method: 'POST',
@@ -63,8 +63,9 @@ export function RegisterModal({ setIsLoginOpen, setIsRegisterOpen }: tSubscribeM
 			
 			const { token } = await responseLogin.json()
 			
-			localStorage.setItem('user:connected', JSON.stringify(responseRegisterData))
-			localStorage.setItem('user:token', JSON.stringify(token))
+			sessionStorage.setItem('user:connected', JSON.stringify({ ...user, id: _id }))
+			sessionStorage.setItem('user:token', JSON.stringify(token))
+
 			setIsRegisterOpen(false)
 		} catch (error) {
 			if (error instanceof ZodError) {
