@@ -1,13 +1,16 @@
 import styled from 'styled-components'
 
 export const StyledChatBox = styled.section`
-	width: 100%;
+	width: calc(100vw - 2rem);
 	height: calc(100vh - 2rem);
 	padding: 0.625rem;
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
-	position: relative;
+	position: fixed;
+	inset: 0;
+	margin: 1rem;
+
 
 	border-radius: 0.375rem;
 	background-color: var(--blue-2);

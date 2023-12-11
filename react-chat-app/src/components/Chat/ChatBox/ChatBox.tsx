@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { ChatBubble } from '../ChatBubble/ChatBubble'
 import { StyledChatBox } from './StyledChatBox'
 import { baseURL } from '../../../constants/baseURL'
@@ -9,6 +9,8 @@ type tChatProps = {
 	id: string
 	name: string
 	contact: string
+	isChatOpen: boolean
+	setIsChatOpen: Dispatch<SetStateAction<boolean>>
 }
 
 type tMessage = {
@@ -19,13 +21,13 @@ type tMessage = {
 	receiver: string
 }
 
-export function ChatBox({ receiver }: { receiver: tChatProps }) {
+export function ChatBox({ id, name, isChatOpen, setIsChatOpen }: tChatProps) {
 	const [messages, setMessages] = useState([] as tMessage[])
 	const [sendMessageContent, setSendMessageContent] = useState('')
 	const userConnected = JSON.parse(sessionStorage.getItem('user:connected')!)
 
 	useEffect(() => {
-		const eventSource = new EventSource(baseURL + `/messages/${userConnected.id}/chat/${receiver.id}`)
+		const eventSource = new EventSource(baseURL + `/messages/${userConnected.id}/chat/${id}`)
 	
 		eventSource.onmessage = (event) => {
 			const data = JSON.parse(event.data)
@@ -40,16 +42,18 @@ export function ChatBox({ receiver }: { receiver: tChatProps }) {
 			eventSource.close()
 		}
 
+		if (!isChatOpen) eventSource.close()
+
 		return () => {
 			eventSource.close()
 		}
-	}, [])
+	}, [isChatOpen])
 
 	async function sendMessage() {
 		const token = JSON.parse(sessionStorage.getItem('user:token')!)
 		
 		try {
-			await fetch(baseURL + `/messages/send/${receiver.id}`, {
+			await fetch(baseURL + `/messages/send/${id}`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
@@ -57,6 +61,7 @@ export function ChatBox({ receiver }: { receiver: tChatProps }) {
 				},
 				body: JSON.stringify({ content: sendMessageContent }),
 			})
+			setSendMessageContent('')
 		} catch (error) {
 			toast.error('Ops, tivemos algum erro ao enviar sua mensagem')
 			console.error(error)
@@ -68,6 +73,9 @@ export function ChatBox({ receiver }: { receiver: tChatProps }) {
 			<div>
 				<header>
 					<h2>Chat Message</h2>
+					<button type="button" onClick={() => { setIsChatOpen(false) } }>
+						Close
+					</button>
 				</header>
 				<section className='messages'>
 					{messages.map(({ id, content, sentAt, sender }) => {
@@ -79,7 +87,7 @@ export function ChatBox({ receiver }: { receiver: tChatProps }) {
 								name={
 									isSender
 										? userConnected.name
-										: receiver.name
+										: name
 								}
 								sentAt={sentAt}
 								message={content}
@@ -95,12 +103,13 @@ export function ChatBox({ receiver }: { receiver: tChatProps }) {
 					name="text-message"
 					className="text-message"
 					placeholder='Digite uma mensagem...'
-					defaultValue={sendMessageContent}
+					autoComplete='off'
+					value={sendMessageContent}
 					onChange={(e) => { setSendMessageContent(e.target.value) }}
 					onKeyUp={(e) => {
 						if (e.key === 'Enter') {
 							sendMessage()
-							e.currentTarget.value = ''
+							e.currentTarget.value = sendMessageContent
 						}
 					}}
 				/>
