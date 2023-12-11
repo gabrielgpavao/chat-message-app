@@ -7,7 +7,13 @@ export function App() {
 	return (
 		<StyledContainer>
 			{/* <SubscribeModal /> */}
-			{/* <Chat /> */}
+			{/* <Chat
+				receiver={{
+					id: '6575fc5fd5874d448b4ca1fa',
+					name: 'Leo',
+					contact: 'leo@mail.com'
+				}}
+			/> */}
 			<Toaster position='top-right'/>
 		</StyledContainer>
 	)
