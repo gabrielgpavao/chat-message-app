@@ -1,14 +1,16 @@
-import { useEffect, useState } from 'react'
-import { ChatBubble } from './ChatBubble/ChatBubble'
-import { StyledChat } from './StyledChat'
-import { baseURL } from '../../constants/baseURL'
-import { PaperPlaneRight } from '@phosphor-icons/react'
+import { Dispatch, SetStateAction, useEffect, useState } from 'react'
+import { ChatBubble } from '../ChatBubble/ChatBubble'
+import { StyledChatBox } from './StyledChatBox'
+import { baseURL } from '../../../constants/baseURL'
+import { CaretLeft, PaperPlaneRight } from '@phosphor-icons/react'
 import toast from 'react-hot-toast'
 
 type tChatProps = {
 	id: string
 	name: string
 	contact: string
+	isChatOpen: boolean
+	setIsChatOpen: Dispatch<SetStateAction<boolean>>
 }
 
 type tMessage = {
@@ -19,13 +21,13 @@ type tMessage = {
 	receiver: string
 }
 
-export function Chat({ receiver }: { receiver: tChatProps }) {
+export function ChatBox({ id, name, contact, isChatOpen, setIsChatOpen }: tChatProps) {
 	const [messages, setMessages] = useState([] as tMessage[])
 	const [sendMessageContent, setSendMessageContent] = useState('')
-	const userConnected = JSON.parse(localStorage.getItem('user:connected')!)
+	const userConnected = JSON.parse(sessionStorage.getItem('user:connected')!)
 
 	useEffect(() => {
-		const eventSource = new EventSource(baseURL + `/messages/${userConnected.id}/chat/${receiver.id}`)
+		const eventSource = new EventSource(baseURL + `/messages/${userConnected.id}/chat/${id}`)
 	
 		eventSource.onmessage = (event) => {
 			const data = JSON.parse(event.data)
@@ -40,16 +42,18 @@ export function Chat({ receiver }: { receiver: tChatProps }) {
 			eventSource.close()
 		}
 
+		if (!isChatOpen) eventSource.close()
+
 		return () => {
 			eventSource.close()
 		}
-	}, [])
+	}, [isChatOpen])
 
 	async function sendMessage() {
-		const token = JSON.parse(localStorage.getItem('user:token')!)
+		const token = JSON.parse(sessionStorage.getItem('user:token')!)
 		
 		try {
-			await fetch(baseURL + `/messages/send/${receiver.id}`, {
+			await fetch(baseURL + `/messages/send/${id}`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
@@ -57,6 +61,7 @@ export function Chat({ receiver }: { receiver: tChatProps }) {
 				},
 				body: JSON.stringify({ content: sendMessageContent }),
 			})
+			setSendMessageContent('')
 		} catch (error) {
 			toast.error('Ops, tivemos algum erro ao enviar sua mensagem')
 			console.error(error)
@@ -64,10 +69,13 @@ export function Chat({ receiver }: { receiver: tChatProps }) {
 	}
 
 	return (
-		<StyledChat>
+		<StyledChatBox>
 			<div>
 				<header>
-					<h2>Chat Message</h2>
+					<button type="button" className='closeChat' onClick={() => { setIsChatOpen(false) } }>
+						<CaretLeft size={32} color='var(--brand-1)' />
+					</button>
+					<h2>{name} - {contact}</h2>
 				</header>
 				<section className='messages'>
 					{messages.map(({ id, content, sentAt, sender }) => {
@@ -79,7 +87,7 @@ export function Chat({ receiver }: { receiver: tChatProps }) {
 								name={
 									isSender
 										? userConnected.name
-										: receiver.name
+										: name
 								}
 								sentAt={sentAt}
 								message={content}
@@ -95,12 +103,13 @@ export function Chat({ receiver }: { receiver: tChatProps }) {
 					name="text-message"
 					className="text-message"
 					placeholder='Digite uma mensagem...'
-					defaultValue={sendMessageContent}
+					autoComplete='off'
+					value={sendMessageContent}
 					onChange={(e) => { setSendMessageContent(e.target.value) }}
 					onKeyUp={(e) => {
 						if (e.key === 'Enter') {
 							sendMessage()
-							e.currentTarget.value = ''
+							e.currentTarget.value = sendMessageContent
 						}
 					}}
 				/>
@@ -108,6 +117,6 @@ export function Chat({ receiver }: { receiver: tChatProps }) {
 					<PaperPlaneRight size={30} color='var(--blue-1)' />
 				</button>
 			</div>
-		</StyledChat>
+		</StyledChatBox>
 	)
 }

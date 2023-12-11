@@ -38,8 +38,8 @@ export function LoginModal({ setIsLoginOpen, setIsRegisterOpen }: tSubscribeModa
 
 			const { user, token } = await response.json()
 
-			localStorage.setItem('user:connected', JSON.stringify(user))
-			localStorage.setItem('user:token', JSON.stringify(token))
+			sessionStorage.setItem('user:connected', JSON.stringify(user))
+			sessionStorage.setItem('user:token', JSON.stringify(token))
 
 			setIsLoginOpen(false)
 		} catch (error) {

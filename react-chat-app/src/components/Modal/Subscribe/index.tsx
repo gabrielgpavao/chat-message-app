@@ -7,9 +7,13 @@ export type tSubscribeModalsProps = {
 	setIsLoginOpen: Dispatch<SetStateAction<boolean>>
 }
 
-export function SubscribeModal() {
+export function SubscribeModal({ setIsSubscribeOpen }: { setIsSubscribeOpen: Dispatch<SetStateAction<boolean>>}) {
 	const [isRegisterOpen, setIsRegisterOpen] = useState(true)
 	const [isLoginOpen, setIsLoginOpen] = useState(false)
+	
+	if (!isRegisterOpen && !isLoginOpen) {
+		setIsSubscribeOpen(false)
+	}
 	
 	return (
 		<>
