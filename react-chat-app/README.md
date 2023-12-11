@@ -1,30 +1,38 @@
-# React + TypeScript + Vite
+# React Chat App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Responsive interface of a messaging application that simulates sending and receiving SMS in real time using tools such as React (Vite), TypeScript and Styled-Components.
 
-Currently, two official plugins are available:
+## Running Locally Guide
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+>**Note:** Before starting this project, it requires the NestJS server to be running locally in your machine so you can make a successful contact to API.
 
-## Expanding the ESLint configuration
+Once you have cloned this repository on your machine, follow these next steps:
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+### Install Dependencies
+Run:
 
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
+```bash
+$ npm install
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+### Enviroment Variables
+
+The variable already has an assigned value.
+The only thing you have to do is run the following:
+
+```bash
+$ cp .env.example .env
+```
+### Run the App
+
+```bash
+$ npm run dev
+```
+
+### Open in your Browser
+
+After opening the following link in your brower, you're ready to go.
+
+```
+http://localhost:5173
+```
