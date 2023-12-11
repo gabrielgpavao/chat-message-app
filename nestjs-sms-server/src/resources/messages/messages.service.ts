@@ -16,23 +16,15 @@ export class MessagesService {
         private readonly messagesProducer: MessagesProducer,
     ) {}
 
-    private messageCacheDatabaseName(
-        senderId: Schema.Types.ObjectId,
-        receiverId: Schema.Types.ObjectId,
-    ): string {
-        return 'message' + ':' + senderId + ':' + receiverId
-    }
-
     async create(createMessageDto: iCreateMessageData): Promise<Message> {
         const newMessage =
             await this.messagesRepository.create(createMessageDto)
 
-        const cacheDatabaseName = this.messageCacheDatabaseName(
+        this.messagesProducer.addMessageToQueue(
             createMessageDto.senderId,
             createMessageDto.receiverId,
+            newMessage,
         )
-
-        this.messagesProducer.addMessageToQueue(cacheDatabaseName, newMessage)
 
         return newMessage
     }
@@ -45,7 +37,7 @@ export class MessagesService {
         senderId: Schema.Types.ObjectId,
         receiverId: Schema.Types.ObjectId,
     ): Promise<Message[]> {
-        const cacheDatabaseName = this.messageCacheDatabaseName(
+        const cacheDatabaseName = await this.redisService.messageCacheDatabase(
             senderId,
             receiverId,
         )
@@ -65,10 +57,11 @@ export class MessagesService {
         const deletedMessage = await this.messagesRepository.remove(id)
 
         if (deletedMessage) {
-            const cacheDatabaseName = this.messageCacheDatabaseName(
-                deletedMessage.sender._id.toString(),
-                deletedMessage.receiver._id.toString(),
-            )
+            const cacheDatabaseName =
+                await this.redisService.messageCacheDatabase(
+                    deletedMessage.sender._id.toString(),
+                    deletedMessage.receiver._id.toString(),
+                )
 
             await this.messagesProducer.messageDeletedQueue(
                 cacheDatabaseName,

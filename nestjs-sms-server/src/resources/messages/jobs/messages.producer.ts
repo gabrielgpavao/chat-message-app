@@ -11,10 +11,14 @@ export class MessagesProducer {
         private readonly messagesQueue: Queue,
     ) {}
 
-    addMessageToQueue(key: string, message: Message) {
+    addMessageToQueue(
+        senderId: Schema.Types.ObjectId,
+        receiverId: Schema.Types.ObjectId,
+        message: Message,
+    ) {
         this.messagesQueue.add(
             'message-sent-job',
-            JSON.stringify({ key, message }),
+            JSON.stringify({ senderId, receiverId, message }),
         )
     }
 
