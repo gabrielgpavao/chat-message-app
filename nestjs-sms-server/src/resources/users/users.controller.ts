@@ -17,12 +17,14 @@ import { UpdateUserDto } from './dto/update-user.dto'
 import { Schema } from 'mongoose'
 import { ZodValidationPipe } from 'nestjs-zod'
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard'
+import { UniqueContactGuard } from './guards/unique-contact.guard'
 
 @UsePipes(ZodValidationPipe)
 @Controller('users')
 export class UsersController {
     constructor(private readonly usersService: UsersService) {}
 
+    @UseGuards(UniqueContactGuard)
     @Post()
     create(@Body() createUserDto: CreateUserDto) {
         return this.usersService.create(createUserDto)
@@ -38,7 +40,7 @@ export class UsersController {
         return this.usersService.findOne(id)
     }
 
-    @UseGuards(JwtAuthGuard)
+    @UseGuards(JwtAuthGuard, UniqueContactGuard)
     @Patch(':id')
     update(
         @Param('id') id: Schema.Types.ObjectId,
