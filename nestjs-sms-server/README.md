@@ -4,10 +4,10 @@ A NestJS service that manages the sending and receiving of real-time text messag
 
 ## Running Locally Guide
 
-This project requires Docker to be already installed in your device.
+> **Note:** This project requires Docker to be already installed in your device.
 You can learn more about Docker [here](https://www.docker.com/).
 
-You can run the code by following one of the two steps:
+Once you have cloned this repository on your machine, you can run the code by following one of the two steps:
 
 ### 1. Dev Container
 

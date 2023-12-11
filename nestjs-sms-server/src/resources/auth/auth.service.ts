@@ -27,6 +27,7 @@ export class AuthService {
     }
     async login({ id, name, contact }: tLoginParams) {
         return {
+            user: { id, name, contact },
             token: this.jwtService.sign({ name, contact }, { subject: id }),
         }
     }
