@@ -22,7 +22,7 @@ type tMessage = {
 export function ChatBox({ receiver }: { receiver: tChatProps }) {
 	const [messages, setMessages] = useState([] as tMessage[])
 	const [sendMessageContent, setSendMessageContent] = useState('')
-	const userConnected = JSON.parse(localStorage.getItem('user:connected')!)
+	const userConnected = JSON.parse(sessionStorage.getItem('user:connected')!)
 
 	useEffect(() => {
 		const eventSource = new EventSource(baseURL + `/messages/${userConnected.id}/chat/${receiver.id}`)
@@ -46,7 +46,7 @@ export function ChatBox({ receiver }: { receiver: tChatProps }) {
 	}, [])
 
 	async function sendMessage() {
-		const token = JSON.parse(localStorage.getItem('user:token')!)
+		const token = JSON.parse(sessionStorage.getItem('user:token')!)
 		
 		try {
 			await fetch(baseURL + `/messages/send/${receiver.id}`, {

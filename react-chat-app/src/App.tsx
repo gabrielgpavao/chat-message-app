@@ -10,9 +10,9 @@ export function App() {
 			{/* <SubscribeModal /> */}
 			{/* <Chat
 				receiver={{
-					id: '6575fc5fd5874d448b4ca1fa',
-					name: 'Leo',
-					contact: 'leo@mail.com'
+					id: '657704d54eb05b4c25e9ece2',
+					name: 'Ale',
+					contact: 'ale@mail.com'
 				}}
 			/> */}
 			<Toaster position='top-right'/>
