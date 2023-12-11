@@ -2,7 +2,7 @@ import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { ChatBubble } from '../ChatBubble/ChatBubble'
 import { StyledChatBox } from './StyledChatBox'
 import { baseURL } from '../../../constants/baseURL'
-import { PaperPlaneRight } from '@phosphor-icons/react'
+import { CaretLeft, PaperPlaneRight } from '@phosphor-icons/react'
 import toast from 'react-hot-toast'
 
 type tChatProps = {
@@ -21,7 +21,7 @@ type tMessage = {
 	receiver: string
 }
 
-export function ChatBox({ id, name, isChatOpen, setIsChatOpen }: tChatProps) {
+export function ChatBox({ id, name, contact, isChatOpen, setIsChatOpen }: tChatProps) {
 	const [messages, setMessages] = useState([] as tMessage[])
 	const [sendMessageContent, setSendMessageContent] = useState('')
 	const userConnected = JSON.parse(sessionStorage.getItem('user:connected')!)
@@ -72,10 +72,10 @@ export function ChatBox({ id, name, isChatOpen, setIsChatOpen }: tChatProps) {
 		<StyledChatBox>
 			<div>
 				<header>
-					<h2>Chat Message</h2>
-					<button type="button" onClick={() => { setIsChatOpen(false) } }>
-						Close
+					<button type="button" className='closeChat' onClick={() => { setIsChatOpen(false) } }>
+						<CaretLeft size={32} color='var(--brand-1)' />
 					</button>
+					<h2>{name} - {contact}</h2>
 				</header>
 				<section className='messages'>
 					{messages.map(({ id, content, sentAt, sender }) => {

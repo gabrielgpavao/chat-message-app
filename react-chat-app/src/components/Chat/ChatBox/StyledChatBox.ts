@@ -11,7 +11,6 @@ export const StyledChatBox = styled.section`
 	inset: 0;
 	margin: 1rem;
 
-
 	border-radius: 0.375rem;
 	background-color: var(--blue-2);
 
@@ -22,12 +21,25 @@ export const StyledChatBox = styled.section`
 		justify-content: center;
 		align-items: center;
 		margin-bottom: 1.25rem;
+		position: relative;
 		
 		border-radius: 0.375rem;
 		background-color: var(--blue-3);
 		color: var(--brand-1);
 		font-size: 24px;
 		font-weight: 600;
+
+		button {
+			height: 100%;
+			width: 2.5rem;
+			display: grid;
+			place-items: center;
+			position: absolute;
+			left: 0;
+
+			border-radius: 0.375rem 0 0 0.375rem;
+			background-color: var(--blue-1);
+		}
 	}
 
 	> div {
@@ -54,7 +66,7 @@ export const StyledChatBox = styled.section`
 		color: var(--blue-1);
 	}
 
-	button {
+	> div > button {
 		height: 2.5rem;
 		width: 2.5rem;
 		position: absolute;

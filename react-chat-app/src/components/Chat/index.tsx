@@ -48,8 +48,9 @@ export function ChatGroups() {
 
 	useEffect(() => {
 		(async () => {
-			const groups = await getGroupsList()
-			setGroups(groups)
+			const groups: tGroup[] = await getGroupsList()
+			const userConnected = JSON.parse(sessionStorage.getItem('user:connected')!)
+			setGroups(groups.filter(group => group._id !== userConnected.id))
 		})()
 	}, [])
 	
