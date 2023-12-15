@@ -1,0 +1,17 @@
+{
+  "name": "smpp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+	"dev:server": "node src/server",
+	"dev:client": "node src/client"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.3.1",
+    "smpp": "^0.6.0-rc.4"
+  }
+}
